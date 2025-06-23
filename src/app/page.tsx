@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { DeviceForm } from '@/components/DeviceForm';
 import { DiagnosticsResult } from '@/components/DiagnosticsResult';
 import type { DiagnoseDeviceOutput } from '@/ai/flows/diagnose-device-flow';
+import { EcommerceSection } from '@/components/EcommerceSection';
+import { Separator } from '@/components/ui/separator';
 
 export type DiagnosisData = DiagnoseDeviceOutput & {
   ticketId: string;
@@ -32,6 +34,10 @@ export default function Home() {
           <DiagnosticsResult diagnosis={diagnosis} isLoading={isLoading} onNewDiagnosis={handleNewDiagnosis} />
         </div>
       </div>
+
+      <Separator className="my-12 md:my-16" />
+
+      <EcommerceSection />
     </div>
   );
 }
