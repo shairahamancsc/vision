@@ -1,16 +1,17 @@
 "use server";
 
-import { diagnoseDevice } from "@/ai/flows/diagnose-device-flow";
-import type { DiagnoseDeviceInput } from "@/ai/flows/diagnose-device-flow";
+export type DeviceFormInput = {
+    customerName: string;
+};
 
-export async function getDiagnostics(input: DiagnoseDeviceInput) {
+export async function getDiagnostics(input: DeviceFormInput) {
+    // Simulate some processing time
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     try {
-        const diagnosisResult = await diagnoseDevice(input);
-        
         const ticketId = `DRX-${Math.floor(100000 + Math.random() * 900000)}`;
         
         return {
-            ...diagnosisResult,
             ticketId,
             customerName: input.customerName,
         };

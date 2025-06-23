@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScanBarcode, Bot, Loader2, Camera } from 'lucide-react';
+import { ScanBarcode, Loader2, Camera, Ticket } from 'lucide-react';
 import { getDiagnostics } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
 import type { DiagnosisData } from '@/app/page';
@@ -110,14 +110,14 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
       if (result) {
         setDiagnosis(result);
         toast({
-          title: "Diagnosis Complete",
+          title: "Ticket Created",
           description: `Repair ticket ${result.ticketId} has been generated.`,
         });
       } else {
         toast({
           variant: "destructive",
-          title: "Diagnosis Failed",
-          description: "Could not get a diagnosis. Please try again.",
+          title: "Ticket Creation Failed",
+          description: "Could not create a ticket. Please try again.",
         });
       }
     } catch (error) {
@@ -263,8 +263,8 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
             </div>
             
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? <Loader2 className="mr-2 animate-spin" /> : <Bot className="mr-2" />}
-              {isLoading ? "Diagnosing..." : "Diagnose with AI"}
+              {isLoading ? <Loader2 className="mr-2 animate-spin" /> : <Ticket className="mr-2" />}
+              {isLoading ? "Generating..." : "Create Ticket"}
             </Button>
           </form>
         </Form>

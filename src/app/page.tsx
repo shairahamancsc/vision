@@ -3,11 +3,10 @@
 import { useState } from 'react';
 import { DeviceForm } from '@/components/DeviceForm';
 import { DiagnosticsResult } from '@/components/DiagnosticsResult';
-import type { DiagnoseDeviceOutput } from '@/ai/flows/diagnose-device-flow';
 import { EcommerceSection } from '@/components/EcommerceSection';
 import { Separator } from '@/components/ui/separator';
 
-export type DiagnosisData = DiagnoseDeviceOutput & {
+export type DiagnosisData = {
   ticketId: string;
   customerName: string;
 };
@@ -26,7 +25,7 @@ export default function Home() {
         <div>
           <div className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight">New Repair Ticket</h1>
-            <p className="text-muted-foreground mt-2">Enter device and customer details to get an AI-powered diagnosis.</p>
+            <p className="text-muted-foreground mt-2">Enter device and customer details to generate a repair ticket.</p>
           </div>
           <DeviceForm setDiagnosis={setDiagnosis} setIsLoading={setIsLoading} isLoading={isLoading} />
         </div>
