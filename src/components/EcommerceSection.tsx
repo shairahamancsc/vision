@@ -2,37 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
-
-const products = [
-  {
-    id: 1,
-    name: "Premium Screen Protector",
-    price: 1499,
-    image: "https://placehold.co/300x300.png",
-    hint: "screen protector",
-  },
-  {
-    id: 2,
-    name: "USB-C Fast Charger",
-    price: 1999,
-    image: "https://placehold.co/300x300.png",
-    hint: "charging cable",
-  },
-  {
-    id: 3,
-    name: "Noise-Cancelling Earbuds",
-    price: 5999,
-    image: "https://placehold.co/300x300.png",
-    hint: "wireless earbuds",
-  },
-  {
-    id: 4,
-    name: "Rugged Phone Case",
-    price: 2499,
-    image: "https://placehold.co/300x300.png",
-    hint: "phone case",
-  },
-];
+import { products } from "@/lib/data";
 
 export function EcommerceSection() {
   return (

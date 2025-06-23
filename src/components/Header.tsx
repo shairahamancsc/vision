@@ -9,6 +9,11 @@ import { ThemeToggle } from './ThemeToggle';
 export function Header() {
   const pathname = usePathname();
 
+  // Hide header on admin and login pages for a focused experience
+  if (pathname.startsWith('/admin') || pathname === '/login') {
+    return null;
+  }
+
   return (
     <header className="bg-white/5 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
@@ -26,6 +31,9 @@ export function Header() {
                 </Button>
             </nav>
             <ThemeToggle />
+            <Button asChild variant="outline" size="sm">
+                <Link href="/login">Admin</Link>
+            </Button>
         </div>
       </div>
     </header>
