@@ -227,7 +227,7 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
                         <FormItem>
                             <FormLabel>Customer Name</FormLabel>
                             <FormControl>
-                            <Input placeholder="John Doe" {...field} />
+                            <Input placeholder="Rohan Kumar" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -240,7 +240,7 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
                         <FormItem>
                             <FormLabel>Mobile Number</FormLabel>
                             <FormControl>
-                            <Input placeholder="123-456-7890" {...field} />
+                            <Input placeholder="9876543210" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -254,7 +254,7 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="123 Main St, Anytown, USA" {...field} />
+                        <Input placeholder="123, MG Road, Bangalore, 560001" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

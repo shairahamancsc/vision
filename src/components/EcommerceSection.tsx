@@ -7,28 +7,28 @@ const products = [
   {
     id: 1,
     name: "Premium Screen Protector",
-    price: 19.99,
+    price: 1499,
     image: "https://placehold.co/300x300.png",
     hint: "screen protector",
   },
   {
     id: 2,
     name: "USB-C Fast Charger",
-    price: 24.99,
+    price: 1999,
     image: "https://placehold.co/300x300.png",
     hint: "charging cable",
   },
   {
     id: 3,
     name: "Noise-Cancelling Earbuds",
-    price: 79.99,
+    price: 5999,
     image: "https://placehold.co/300x300.png",
     hint: "wireless earbuds",
   },
   {
     id: 4,
     name: "Rugged Phone Case",
-    price: 29.99,
+    price: 2499,
     image: "https://placehold.co/300x300.png",
     hint: "phone case",
   },
@@ -55,7 +55,7 @@ export function EcommerceSection() {
               <CardContent className="p-4 flex-grow flex flex-col">
                 <CardTitle className="text-lg font-medium flex-grow">{product.name}</CardTitle>
                 <p className="text-primary font-bold text-xl mt-2">
-                    {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price)}
+                    {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(product.price)}
                 </p>
               </CardContent>
               <CardFooter className="p-4 pt-0">

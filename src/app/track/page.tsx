@@ -50,7 +50,7 @@ export default function TrackPage() {
             ticketId,
             status: currentStatus,
             progress: (statusIndex + 1) / statuses.length * 100,
-            estimatedCompletion: completionDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+            estimatedCompletion: completionDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
             notes: notesByStatus[currentStatus] || ['No updates at this time.'],
         };
 
