@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Wrench } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const pathname = usePathname();
@@ -16,14 +16,17 @@ export function Header() {
           <Wrench className="h-7 w-7 text-primary" />
           <span className="text-xl font-bold">Device Rx</span>
         </Link>
-        <nav className="flex items-center gap-2">
-            <Button asChild variant={pathname === '/' ? 'secondary' : 'ghost'} size="sm">
-                <Link href="/">New Ticket</Link>
-            </Button>
-            <Button asChild variant={pathname === '/track' ? 'secondary' : 'ghost'} size="sm">
-                <Link href="/track">Track Repair</Link>
-            </Button>
-        </nav>
+        <div className="flex items-center gap-2">
+            <nav className="flex items-center gap-2">
+                <Button asChild variant={pathname === '/' ? 'secondary' : 'ghost'} size="sm">
+                    <Link href="/">New Ticket</Link>
+                </Button>
+                <Button asChild variant={pathname === '/track' ? 'secondary' : 'ghost'} size="sm">
+                    <Link href="/track">Track Repair</Link>
+                </Button>
+            </nav>
+            <ThemeToggle />
+        </div>
       </div>
     </header>
   );
