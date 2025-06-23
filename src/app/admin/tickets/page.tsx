@@ -1,3 +1,5 @@
+"use client";
+
 import { TicketStatusForm } from "@/components/TicketStatusForm"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
