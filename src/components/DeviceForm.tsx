@@ -20,8 +20,8 @@ import { getDiagnostics } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
 import type { DiagnosisData } from '@/app/page';
 import { useState, useRef, useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   brand: z.string().min(2, "Brand is required."),
