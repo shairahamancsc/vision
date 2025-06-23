@@ -1,12 +1,16 @@
 "use client"
 
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
-import { monthlySales } from "@/lib/data"
+import type { MonthlySale } from "@/lib/data";
 
-export function SalesChart() {
+type SalesChartProps = {
+  data: MonthlySale[];
+}
+
+export function SalesChart({ data }: SalesChartProps) {
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={monthlySales}>
+      <BarChart data={data}>
         <XAxis
           dataKey="month"
           stroke="hsl(var(--muted-foreground))"

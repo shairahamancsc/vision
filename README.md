@@ -10,7 +10,7 @@ This project is set up for easy deployment with Vercel and Supabase.
 
 1.  Go to [Supabase](https://supabase.com/) and create a new project.
 2.  Navigate to your project's **Settings > API**.
-3.  Copy your **Project URL** and **public anon key**. You will need these for your environment variables.
+3.  Copy your **Project URL**, **public anon key**, and **service_role secret**. You will need these for your environment variables.
 4.  Go to the **SQL Editor** in your Supabase dashboard and run the following queries to create the necessary tables.
 
     **Products Table:**
@@ -65,7 +65,8 @@ This project is set up for easy deployment with Vercel and Supabase.
 3.  Vercel will detect that you are using Next.js and configure the build settings automatically.
 4.  Go to your project's **Settings > Environment Variables** in Vercel.
 5.  Add the following environment variables using the values you got from Supabase:
-    *   `NEXT_PUBLIC_SUPABASE_URL` (Your project URL)
-    *   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Your public anon key)
+    *   `NEXT_PUBLIC_SUPABASE_URL` (Your project URL from API settings)
+    *   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Your public `anon` key from API settings)
+    *   `SUPABASE_SERVICE_ROLE_KEY` (Your `service_role` secret from API settings. **Important**: This is a secret and should never be exposed on the client side.)
     *   `GOOGLE_API_KEY` (if you are using Google AI services)
 6.  Deploy! Vercel will build and deploy your application. You can now connect the frontend components to fetch data from your new Supabase tables.
