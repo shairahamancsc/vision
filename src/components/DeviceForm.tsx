@@ -15,10 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { ScanBarcode, Bot, Loader2 } from 'lucide-react';
+import { ScanBarcode, Bot, Loader2, Camera } from 'lucide-react';
 import { getDiagnostics } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
 import type { DiagnosisData } from '@/app/page';
+import { useState, useRef, useEffect } from "react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
 const formSchema = z.object({
   brand: z.string().min(2, "Brand is required."),
@@ -37,6 +40,10 @@ type DeviceFormProps = {
 
 export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceFormProps) {
   const { toast } = useToast();
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,6 +55,52 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
       problemDescription: "",
     },
   });
+
+  useEffect(() => {
+    if (!isScannerOpen) {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+      }
+      return;
+    }
+
+    const getCameraPermission = async () => {
+      if (typeof window === "undefined" || !navigator.mediaDevices) {
+        setHasCameraPermission(false);
+        return;
+      }
+      
+      setHasCameraPermission(null);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (error) {
+        console.error("Error accessing camera:", error);
+        setHasCameraPermission(false);
+        toast({
+          variant: "destructive",
+          title: "Camera Access Denied",
+          description: "Please enable camera permissions in your browser settings to use the scanner.",
+        });
+      }
+    };
+
+    getCameraPermission();
+  }, [isScannerOpen, toast]);
+
+  const handleSimulateScan = () => {
+    form.setValue("model", `Scanned-Model-${Math.floor(100 + Math.random() * 900)}`);
+    setIsScannerOpen(false);
+    toast({
+      title: "Scan Successful",
+      description: "Device model has been populated.",
+    });
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -109,9 +162,44 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
                             <FormControl>
                                 <Input placeholder="e.g., iPhone 14 Pro" {...field} />
                             </FormControl>
-                            <Button type="button" variant="outline" size="icon" aria-label="Scan barcode">
-                                <ScanBarcode />
-                            </Button>
+                             <Dialog open={isScannerOpen} onOpenChange={setIsScannerOpen}>
+                              <DialogTrigger asChild>
+                                  <Button type="button" variant="outline" size="icon" aria-label="Scan barcode">
+                                      <ScanBarcode />
+                                  </Button>
+                              </DialogTrigger>
+                              <DialogContent className="sm:max-w-[425px]">
+                                <DialogHeader>
+                                  <DialogTitle>Scan Device Barcode</DialogTitle>
+                                  <DialogDescription>
+                                    Position the device's barcode or QR code in front of the camera.
+                                  </DialogDescription>
+                                </DialogHeader>
+                                <div className="p-4 bg-muted rounded-md relative overflow-hidden">
+                                    <video ref={videoRef} className="w-full aspect-video rounded-md bg-black" autoPlay muted playsInline />
+                                    {hasCameraPermission === false && (
+                                        <Alert variant="destructive" className="mt-4">
+                                            <AlertTitle>Camera Access Required</AlertTitle>
+                                            <AlertDescription>
+                                            Please allow camera access to use this feature. You may need to refresh the page after granting permission.
+                                            </AlertDescription>
+                                        </Alert>
+                                    )}
+                                    {hasCameraPermission === null && (
+                                        <div className="absolute inset-0 flex items-center justify-center bg-background/80">
+                                            <Loader2 className="animate-spin" />
+                                            <span className="ml-2">Requesting camera...</span>
+                                        </div>
+                                    )}
+                                </div>
+                                <DialogFooter>
+                                  <Button type="button" onClick={handleSimulateScan} disabled={!hasCameraPermission}>
+                                    <Camera className="mr-2" />
+                                    Simulate Scan
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
                         </div>
                         <FormMessage />
                       </FormItem>
