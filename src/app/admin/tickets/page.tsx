@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function AdminTicketsPage() {
   const handleTrack = (ticketId: string) => {
     // In a real app, you would fetch and display ticket details here
-    console.log("Admin searching for ticket:", ticketId)
     // For now, we just log it. The form will show validation.
   }
 

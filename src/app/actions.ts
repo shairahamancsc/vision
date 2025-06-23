@@ -5,9 +5,6 @@ export type DeviceFormInput = {
 };
 
 export async function getDiagnostics(input: DeviceFormInput) {
-    // Simulate some processing time
-    await new Promise(resolve => setTimeout(resolve, 500));
-
     try {
         const ticketId = `DRX-${Math.floor(100000 + Math.random() * 900000)}`;
         

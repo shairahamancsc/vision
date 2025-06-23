@@ -32,23 +32,21 @@ export default function LoginPage() {
 
   const onSubmit = (values: z.infer<typeof loginSchema>) => {
     setIsLoading(true);
-    // Mock authentication: In a real app, you'd call an API here.
-    setTimeout(() => {
-      if (values.email === 'admin@example.com' && values.password === 'password') {
-        toast({
-          title: 'Login Successful',
-          description: 'Redirecting to admin dashboard...',
-        });
-        router.push('/admin');
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Login Failed',
-          description: 'Invalid email or password.',
-        });
-        setIsLoading(false);
-      }
-    }, 1000);
+    // In a real app, you'd call your authentication API here (e.g., with Supabase)
+    if (values.email === 'admin@example.com' && values.password === 'password') {
+      toast({
+        title: 'Login Successful',
+        description: 'Redirecting to admin dashboard...',
+      });
+      router.push('/admin');
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: 'Invalid email or password.',
+      });
+      setIsLoading(false);
+    }
   };
 
   return (

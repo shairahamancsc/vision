@@ -5,7 +5,6 @@ import { TicketStatusForm } from '@/components/TicketStatusForm';
 import { TicketStatusDisplay } from '@/components/TicketStatusDisplay';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Search } from 'lucide-react';
 
 export type StatusInfo = {
   ticketId: string;
@@ -20,43 +19,34 @@ export default function TrackPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Mock function to "fetch" ticket status
-  const fetchTicketStatus = (ticketId: string) => {
+  // This function should be connected to your backend to fetch real ticket data
+  const fetchTicketStatus = async (ticketId: string) => {
     setIsLoading(true);
     setStatusInfo(null);
     setHasSearched(true);
 
-    // Simulate network delay
-    setTimeout(() => {
-        // Simple hash to get a deterministic but "random" status
-        const hash = ticketId.split('').reduce((acc, char) => char.charCodeAt(0) + ((acc << 5) - acc), 0);
-        const statuses: StatusInfo['status'][] = ['Received', 'Diagnosing', 'Awaiting Parts', 'In Repair', 'Ready for Pickup', 'Completed'];
-        const notesByStatus = {
-            'Received': ['Device checked in and ticket created.'],
-            'Diagnosing': ['Our technician is currently diagnosing the issue.', 'Initial tests are being run.'],
-            'Awaiting Parts': ['A required component has been ordered.', 'Expected arrival in 3-5 business days.'],
-            'In Repair': ['Repair is in progress.', 'The faulty component is being replaced.'],
-            'Ready for Pickup': ['Your device has been repaired and is ready for pickup.', 'Please bring your ticket for collection.'],
-            'Completed': ['Device collected by customer.'],
-        };
-        const statusIndex = Math.abs(hash) % statuses.length;
-        const currentStatus = statuses[statusIndex];
+    // TODO: Replace this with an actual API call to your Supabase backend
+    // For now, we simulate a "not found" state
+    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
+    
+    // Example of what a real implementation might look like:
+    // try {
+    //   const { data, error } = await supabase
+    //     .from('tickets')
+    //     .select('*')
+    //     .eq('ticketId', ticketId)
+    //     .single();
+    //   if (error || !data) {
+    //     setStatusInfo(null);
+    //   } else {
+    //     setStatusInfo(data);
+    //   }
+    // } catch (e) {
+    //   setStatusInfo(null);
+    // }
 
-        const today = new Date();
-        const completionDate = new Date(today);
-        completionDate.setDate(today.getDate() + (Math.abs(hash) % 5) + 1);
-        
-        const newStatus: StatusInfo = {
-            ticketId,
-            status: currentStatus,
-            progress: (statusIndex + 1) / statuses.length * 100,
-            estimatedCompletion: completionDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
-            notes: notesByStatus[currentStatus] || ['No updates at this time.'],
-        };
-
-        setStatusInfo(newStatus);
-        setIsLoading(false);
-    }, 1000);
+    setStatusInfo(null); // Default to not found
+    setIsLoading(false);
   };
 
   return (

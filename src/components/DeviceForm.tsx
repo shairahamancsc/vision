@@ -80,7 +80,6 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
           videoRef.current.srcObject = stream;
         }
       } catch (error) {
-        console.error("Error accessing camera:", error);
         setHasCameraPermission(false);
         toast({
           variant: "destructive",
@@ -94,6 +93,7 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
   }, [isScannerOpen, toast]);
 
   const handleSimulateScan = () => {
+    // In a production app, a library like `react-qr-reader` would be used here.
     form.setValue("model", `Scanned-Model-${Math.floor(100 + Math.random() * 900)}`);
     setIsScannerOpen(false);
     toast({
@@ -106,6 +106,8 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
     setIsLoading(true);
     setDiagnosis(null);
     try {
+      // This server action creates a ticket.
+      // In a real app, this would also save the details to your Supabase database.
       const result = await getDiagnostics(values);
       if (result) {
         setDiagnosis(result);
@@ -121,11 +123,10 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
         });
       }
     } catch (error) {
-      console.error(error);
       toast({
         variant: "destructive",
         title: "An Error Occurred",
-        description: "Something went wrong. Please check the console for details.",
+        description: "Something went wrong while creating the ticket.",
       });
     } finally {
       setIsLoading(false);
