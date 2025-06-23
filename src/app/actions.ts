@@ -1,10 +1,20 @@
 "use server";
 
-export type DeviceFormInput = {
+export type DiagnosisData = {
+    ticketId: string;
     customerName: string;
 };
 
-export async function getDiagnostics(input: DeviceFormInput) {
+export type DeviceFormInput = {
+    brand: string;
+    model: string;
+    customerName: string;
+    mobileNumber: string;
+    address: string;
+    problemDescription: string;
+};
+
+export async function getDiagnostics(input: DeviceFormInput): Promise<DiagnosisData | null> {
     try {
         const ticketId = `DRX-${Math.floor(100000 + Math.random() * 900000)}`;
         

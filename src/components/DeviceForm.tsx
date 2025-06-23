@@ -18,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScanBarcode, Loader2, Camera, Ticket } from 'lucide-react';
 import { getDiagnostics } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
-import type { DiagnosisData } from '@/app/page';
+import type { DiagnosisData } from '@/app/actions';
 import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

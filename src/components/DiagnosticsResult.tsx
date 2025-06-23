@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Ticket, User, Printer, Bot } from "lucide-react";
-import type { DiagnosisData } from "@/app/page";
+import type { DiagnosisData } from "@/app/actions";
 
 type DiagnosticsResultProps = {
   diagnosis: DiagnosisData | null;
