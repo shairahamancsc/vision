@@ -10,6 +10,7 @@ import {
   SheetContent,
   SheetTrigger,
   SheetClose,
+  SheetTitle,
 } from "@/components/ui/sheet";
 
 export function Header() {
@@ -59,6 +60,7 @@ export function Header() {
                     </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="p-0">
+                    <SheetTitle className="sr-only">Main Menu</SheetTitle>
                     <div className="flex flex-col h-full">
                         <div className="p-4 border-b">
                             <SheetClose asChild>

@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Wrench, LayoutDashboard, Ticket, ShoppingCart, Users, Power, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from '@/components/ui/sheet';
 
 export default function AdminLayout({
   children,
@@ -63,6 +63,7 @@ export default function AdminLayout({
                 </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="sm:max-w-xs p-0">
+                    <SheetTitle className="sr-only">Admin Menu</SheetTitle>
                     <div className="flex h-full flex-col">
                         <div className="flex h-16 shrink-0 items-center border-b px-6">
                             <SheetClose asChild>
