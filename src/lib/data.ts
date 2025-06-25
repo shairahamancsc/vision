@@ -48,7 +48,7 @@ export type Ticket = {
 async function executeQuery<T>(
   query: (
     client: SupabaseClient
-  ) => Promise<{ data: T | null; error: any }>
+  ) => PromiseLike<{ data: T | null; error: any }>
 ): Promise<T | null> {
   const supabase = createAdminClient();
   if (!supabase) {
