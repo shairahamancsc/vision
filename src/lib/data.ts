@@ -1,19 +1,5 @@
-import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-// This client is used for server-side data fetching.
-// It uses the service role key, which bypasses RLS.
-// Ensure this code is only run on the server.
-function getSupabaseAdminClient(): SupabaseClient | null {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-  if (!supabaseUrl || supabaseUrl.includes('YOUR_SUPABASE_URL') || !serviceKey || serviceKey.includes('YOUR_SUPABASE_SERVICE_KEY')) {
-    console.warn('Supabase credentials are not set or are placeholders. Please update your .env file. Server-side data fetching will be disabled.');
-    return null;
-  }
-  
-  return createClient(supabaseUrl, serviceKey);
-}
+import { createAdminClient } from '@/lib/supabase/server';
 
 // Define types for our data
 export type Product = {
@@ -54,7 +40,7 @@ export type Ticket = {
 };
 
 export async function getProducts(): Promise<Product[]> {
-  const supabase = getSupabaseAdminClient();
+  const supabase = createAdminClient();
   if (!supabase) return [];
 
   try {
@@ -71,7 +57,7 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getUsers(): Promise<User[]> {
-    const supabase = getSupabaseAdminClient();
+    const supabase = createAdminClient();
     if (!supabase) return [];
     
     try {
@@ -88,7 +74,7 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function getMonthlySales(): Promise<MonthlySale[]> {
-    const supabase = getSupabaseAdminClient();
+    const supabase = createAdminClient();
     if (!supabase) return [];
 
     const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -108,7 +94,7 @@ export async function getMonthlySales(): Promise<MonthlySale[]> {
 }
 
 export async function getTickets(): Promise<Ticket[]> {
-    const supabase = getSupabaseAdminClient();
+    const supabase = createAdminClient();
     if (!supabase) return [];
 
     try {
@@ -125,7 +111,7 @@ export async function getTickets(): Promise<Ticket[]> {
 }
 
 export async function getTicketByTicketId(ticketId: string): Promise<Ticket | null> {
-    const supabase = getSupabaseAdminClient();
+    const supabase = createAdminClient();
     if (!supabase) return null;
 
     try {
