@@ -1,6 +1,3 @@
-// Load environment variables from .env file
-require('dotenv').config();
-
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {

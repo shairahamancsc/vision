@@ -1,12 +1,19 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 // This client is used for server-side data fetching.
 // It uses the service role key, which bypasses RLS.
 // Ensure this code is only run on the server.
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+function getSupabaseAdminClient(): SupabaseClient | null {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || supabaseUrl.includes('YOUR_SUPABASE_URL') || !serviceKey || serviceKey.includes('YOUR_SUPABASE_SERVICE_KEY')) {
+    console.warn('Supabase credentials are not set or are placeholders. Please update your .env file. Server-side data fetching will be disabled.');
+    return null;
+  }
+  
+  return createClient(supabaseUrl, serviceKey);
+}
 
 // Define types for our data
 export type Product = {
@@ -47,6 +54,9 @@ export type Ticket = {
 };
 
 export async function getProducts(): Promise<Product[]> {
+  const supabase = getSupabaseAdminClient();
+  if (!supabase) return [];
+
   try {
     const { data, error } = await supabase.from('products').select('*').order('name');
     if (error) {
@@ -61,6 +71,9 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 export async function getUsers(): Promise<User[]> {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return [];
+    
     try {
         const { data, error } = await supabase.from('users').select('*').order('name');
         if (error) {
@@ -75,6 +88,9 @@ export async function getUsers(): Promise<User[]> {
 }
 
 export async function getMonthlySales(): Promise<MonthlySale[]> {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return [];
+
     const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     try {
         const { data, error } = await supabase.from('monthly_sales').select('*');
@@ -92,6 +108,9 @@ export async function getMonthlySales(): Promise<MonthlySale[]> {
 }
 
 export async function getTickets(): Promise<Ticket[]> {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return [];
+
     try {
         const { data, error } = await supabase.from('tickets').select('*').order('created_at', { ascending: false });
         if (error) {
@@ -106,6 +125,9 @@ export async function getTickets(): Promise<Ticket[]> {
 }
 
 export async function getTicketByTicketId(ticketId: string): Promise<Ticket | null> {
+    const supabase = getSupabaseAdminClient();
+    if (!supabase) return null;
+
     try {
         const { data, error } = await supabase.from('tickets').select('*').eq('ticket_id', ticketId).single();
         if (error) {
