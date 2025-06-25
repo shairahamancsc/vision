@@ -16,7 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { format } from "date-fns";
-import { ArrowLeft, Badge, FileText, Wrench, Loader2, Save } from "lucide-react";
+import { ArrowLeft, FileText, Wrench, Loader2, Save } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { updateTicketStatus, UpdateTicketFormInput } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 
@@ -208,4 +209,3 @@ export default function TicketDetailsPage() {
         </div>
     );
 }
-
