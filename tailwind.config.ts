@@ -88,15 +88,10 @@ export default {
             height: '0',
           },
         },
-        'move-bg': {
-          '0%, 100%': { backgroundPosition: '0% 50%' },
-          '50%': { backgroundPosition: '100% 50%' },
-        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'move-bg': 'move-bg 20s ease infinite',
       },
     },
   },

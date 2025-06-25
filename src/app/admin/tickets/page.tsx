@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -43,8 +44,10 @@ export default async function AdminTicketsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Tickets</h1>
-        <Button>
+        <Button asChild>
+          <Link href="/">
             <PlusCircle className="mr-2 h-4 w-4" /> Add Ticket
+          </Link>
         </Button>
       </div>
       
