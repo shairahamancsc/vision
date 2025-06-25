@@ -5,13 +5,26 @@ import { TicketStatusForm } from '@/components/TicketStatusForm';
 import { TicketStatusDisplay } from '@/components/TicketStatusDisplay';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getTicketStatusAction } from '@/app/actions';
+import { format } from 'date-fns';
+
+export type Status = 'Received' | 'Diagnosing' | 'Awaiting Parts' | 'In Repair' | 'Ready for Pickup' | 'Completed';
 
 export type StatusInfo = {
   ticketId: string;
-  status: 'Received' | 'Diagnosing' | 'Awaiting Parts' | 'In Repair' | 'Ready for Pickup' | 'Completed';
+  status: Status;
   progress: number;
   estimatedCompletion: string;
   notes: string[];
+};
+
+const statusToProgress: Record<Status, number> = {
+    'Received': 10,
+    'Diagnosing': 30,
+    'Awaiting Parts': 50,
+    'In Repair': 70,
+    'Ready for Pickup': 90,
+    'Completed': 100,
 };
 
 export default function TrackPage() {
@@ -19,33 +32,26 @@ export default function TrackPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // This function should be connected to your backend to fetch real ticket data
   const fetchTicketStatus = async (ticketId: string) => {
     setIsLoading(true);
     setStatusInfo(null);
     setHasSearched(true);
-
-    // TODO: Replace this with an actual API call to your Supabase backend
-    // For now, we simulate a "not found" state
-    await new Promise(resolve => setTimeout(resolve, 500)); // Simulate network latency
     
-    // Example of what a real implementation might look like:
-    // try {
-    //   const { data, error } = await supabase
-    //     .from('tickets')
-    //     .select('*')
-    //     .eq('ticketId', ticketId)
-    //     .single();
-    //   if (error || !data) {
-    //     setStatusInfo(null);
-    //   } else {
-    //     setStatusInfo(data);
-    //   }
-    // } catch (e) {
-    //   setStatusInfo(null);
-    // }
+    const ticket = await getTicketStatusAction(ticketId);
 
-    setStatusInfo(null); // Default to not found
+    if (ticket) {
+        const status = ticket.status as Status;
+        setStatusInfo({
+            ticketId: ticket.ticket_id,
+            status: status,
+            progress: statusToProgress[status] || 0,
+            estimatedCompletion: ticket.estimated_completion ? format(new Date(ticket.estimated_completion), 'PPP') : 'Not available',
+            notes: ticket.notes && ticket.notes.length > 0 ? ticket.notes : ['No notes yet.'],
+        });
+    } else {
+        setStatusInfo(null);
+    }
+    
     setIsLoading(false);
   };
 

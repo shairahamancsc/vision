@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScanBarcode, Loader2, Camera, Ticket } from 'lucide-react';
-import { getDiagnostics } from '@/app/actions';
+import { createTicket } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
 import type { DiagnosisData } from '@/app/actions';
 import { useState, useRef, useEffect } from "react";
@@ -106,9 +106,8 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
     setIsLoading(true);
     setDiagnosis(null);
     try {
-      // This server action creates a ticket.
-      // In a real app, this would also save the details to your Supabase database.
-      const result = await getDiagnostics(values);
+      // This server action creates a ticket and saves it to the database.
+      const result = await createTicket(values);
       if (result) {
         setDiagnosis(result);
         toast({

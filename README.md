@@ -58,6 +58,28 @@ This project is set up for easy deployment with Vercel and Supabase.
     ('Apr', 450000), ('May', 600000), ('Jun', 550000);
     ```
 
+    **Tickets Table:**
+    ```sql
+    CREATE TABLE tickets (
+      id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+      ticket_id TEXT NOT NULL UNIQUE,
+      customer_name TEXT NOT NULL,
+      mobile_number TEXT NOT NULL,
+      address TEXT NOT NULL,
+      brand TEXT NOT NULL,
+      model TEXT NOT NULL,
+      problem_description TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'Received',
+      notes TEXT[] DEFAULT ARRAY[]::TEXT[],
+      estimated_completion DATE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    -- Optional: Insert some sample data
+    INSERT INTO tickets (ticket_id, customer_name, mobile_number, address, brand, model, problem_description, status, notes, estimated_completion) VALUES
+    ('DRX-123456', 'Rohan Kumar', '9876543210', '123 MG Road, Bangalore', 'Apple', 'iPhone 14 Pro', 'Screen is cracked.', 'In Repair', ARRAY['Screen replacement ordered.'], '2024-07-30'),
+    ('DRX-654321', 'Priya Sharma', '8765432109', '456 Koramangala, Bangalore', 'Samsung', 'Galaxy S23', 'Battery drains very quickly.', 'Diagnosing', ARRAY['Initial tests running.'], '2024-07-28');
+    ```
+
 ### 2. Deploy to Vercel
 
 1.  Click the "Deploy with Vercel" button or push your code to a Git repository (GitHub, GitLab, Bitbucket).

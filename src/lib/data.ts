@@ -31,6 +31,21 @@ export type MonthlySale = {
     sales: number;
 }
 
+export type Ticket = {
+  id: number;
+  ticket_id: string;
+  customer_name: string;
+  mobile_number: string;
+  address: string;
+  brand: string;
+  model: string;
+  problem_description: string;
+  status: string;
+  notes: string[];
+  estimated_completion: string | null;
+  created_at: string;
+};
+
 export async function getProducts(): Promise<Product[]> {
   try {
     const { data, error } = await supabase.from('products').select('*').order('name');
@@ -76,19 +91,51 @@ export async function getMonthlySales(): Promise<MonthlySale[]> {
     }
 }
 
+export async function getTickets(): Promise<Ticket[]> {
+    try {
+        const { data, error } = await supabase.from('tickets').select('*').order('created_at', { ascending: false });
+        if (error) {
+            console.error('Database Error (getTickets):', error.message);
+            return [];
+        }
+        return data || [];
+    } catch (error: any) {
+        console.error('Data Fetching Error (getTickets):', error.message);
+        return [];
+    }
+}
+
+export async function getTicketByTicketId(ticketId: string): Promise<Ticket | null> {
+    try {
+        const { data, error } = await supabase.from('tickets').select('*').eq('ticket_id', ticketId).single();
+        if (error) {
+            // .single() throws an error if no row is found, which is expected.
+            if (error.code !== 'PGRST116') {
+                console.error('Database Error (getTicketByTicketId):', error.message);
+            }
+            return null;
+        }
+        return data;
+    } catch (error: any) {
+        console.error('Data Fetching Error (getTicketByTicketId):', error.message);
+        return null;
+    }
+}
+
 export async function getStats() {
-    const [products, users, sales] = await Promise.all([
+    const [products, users, sales, tickets] = await Promise.all([
         getProducts(),
         getUsers(),
-        getMonthlySales()
+        getMonthlySales(),
+        getTickets()
     ]);
 
     const totalRevenue = sales.reduce((sum, current) => sum + current.sales, 0);
     const activeUsers = users.length;
     const productsInStock = products.reduce((sum, current) => sum + current.stock, 0);
+    const openTickets = tickets.filter(t => t.status !== 'Completed').length;
 
     // Hardcoded values for data not yet in the database
-    const openTickets = 235;
     const revenueGrowth = "+20.1%";
     const ticketGrowth = "+18.1%";
 
