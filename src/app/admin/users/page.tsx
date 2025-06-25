@@ -71,7 +71,7 @@ export default async function AdminUsersPage() {
                               <Badge variant={user.role === 'Admin' ? 'default' : 'secondary'}>{user.role}</Badge>
                           </TableCell>
                         <TableCell className="hidden md:table-cell">
-                          {new Date(user.lastLogin).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' })}
+                          {user.lastLogin ? new Date(user.lastLogin).toLocaleString('en-IN', { dateStyle: 'long', timeStyle: 'short' }) : 'Never'}
                         </TableCell>
                         <TableCell>
                           <DropdownMenu>

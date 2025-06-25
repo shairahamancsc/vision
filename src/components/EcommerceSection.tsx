@@ -17,11 +17,11 @@ export async function EcommerceSection() {
                 <CardHeader className="p-0 border-b">
                   <div className="aspect-square relative">
                       <Image
-                        src={product.image}
+                        src={product.image || `https://placehold.co/300x300.png`}
                         alt={product.name}
                         fill
                         className="object-cover"
-                        data-ai-hint={product.hint}
+                        data-ai-hint={product.hint || 'product accessory'}
                       />
                   </div>
                 </CardHeader>

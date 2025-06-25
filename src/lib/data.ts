@@ -7,8 +7,8 @@ export type Product = {
   name: string;
   price: number;
   stock: number;
-  image: string;
-  hint: string;
+  image: string | null;
+  hint: string | null;
 };
 
 export type User = {
@@ -16,7 +16,7 @@ export type User = {
     name: string;
     email: string;
     role: string;
-    lastLogin: string;
+    lastLogin: string | null;
 };
 
 export type MonthlySale = {
@@ -34,7 +34,7 @@ export type Ticket = {
   model: string;
   problem_description: string;
   status: string;
-  notes: string[];
+  notes: string[] | null;
   estimated_completion: string | null;
   created_at: string;
 };

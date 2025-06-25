@@ -64,9 +64,9 @@ export default async function AdminProductsPage() {
                         alt={product.name}
                         className="aspect-square rounded-md object-cover"
                         height="64"
-                        src={product.image}
+                        src={product.image || `https://placehold.co/64x64.png`}
                         width="64"
-                        data-ai-hint={product.hint}
+                        data-ai-hint={product.hint || 'product image'}
                       />
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
