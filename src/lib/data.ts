@@ -1,5 +1,6 @@
 
 import { createAdminClient } from '@/lib/supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 // Define types for our data
 export type Product = {
@@ -25,7 +26,7 @@ export type MonthlySale = {
 }
 
 export type Ticket = {
-  id: number;
+  id:number;
   ticket_id: string;
   customer_name: string;
   mobile_number: string;
@@ -39,95 +40,77 @@ export type Ticket = {
   created_at: string;
 };
 
-export async function getProducts(): Promise<Product[]> {
+/**
+ * This generic function wraps Supabase queries to centralize client creation and error handling.
+ * @param query A function that takes a Supabase client and returns a query promise.
+ * @returns The data from the query, or null if an error occurs or the client isn't available.
+ */
+async function executeQuery<T>(
+  query: (
+    client: SupabaseClient
+  ) => Promise<{ data: T | null; error: any }>
+): Promise<T | null> {
   const supabase = createAdminClient();
-  if (!supabase) return [];
+  if (!supabase) {
+    // The warning is already logged in createAdminClient, so we just return null.
+    return null;
+  }
 
   try {
-    const { data, error } = await supabase.from('products').select('*').order('name');
+    const { data, error } = await query(supabase);
+
     if (error) {
-      console.error('Database Error (getProducts):', error.message);
-      return [];
+      // Don't log an error if a single record is not found (this is expected for .single())
+      if (error.code !== 'PGRST116') {
+        console.error('Database Error:', error.message);
+      }
+      return null;
     }
-    return data || [];
-  } catch (error: any) {
-    console.error('Data Fetching Error (getProducts):', error.message);
-    return [];
+    return data;
+  } catch (e: any) {
+    console.error('Unexpected Data Fetching Error:', e.message);
+    return null;
   }
 }
 
+export async function getProducts(): Promise<Product[]> {
+  const data = await executeQuery(supabase => 
+    supabase.from('products').select('*').order('name')
+  );
+  return data || [];
+}
+
 export async function getUsers(): Promise<User[]> {
-    const supabase = createAdminClient();
-    if (!supabase) return [];
-    
-    try {
-        const { data, error } = await supabase.from('users').select('*').order('name');
-        if (error) {
-            console.error('Database Error (getUsers):', error.message);
-            return [];
-        }
-        return data || [];
-    } catch (error: any) {
-        console.error('Data Fetching Error (getUsers):', error.message);
-        return [];
-    }
+  const data = await executeQuery(supabase =>
+    supabase.from('users').select('*').order('name')
+  );
+  return data || [];
 }
 
 export async function getMonthlySales(): Promise<MonthlySale[]> {
-    const supabase = createAdminClient();
-    if (!supabase) return [];
+  const data = await executeQuery(supabase =>
+    supabase.from('monthly_sales').select('*')
+  );
+  
+  if (!data) return [];
 
-    const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    try {
-        const { data, error } = await supabase.from('monthly_sales').select('*');
-        if (error) {
-            console.error('Database Error (getMonthlySales):', error.message);
-            return [];
-        }
-        // Sort data based on monthOrder
-        const sortedData = (data || []).sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
-        return sortedData;
-    } catch (error: any) {
-        console.error('Data Fetching Error (getMonthlySales):', error.message);
-        return [];
-    }
+  // Sort data chronologically since the database doesn't guarantee order.
+  const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return [...data].sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
 }
 
 export async function getTickets(): Promise<Ticket[]> {
-    const supabase = createAdminClient();
-    if (!supabase) return [];
-
-    try {
-        const { data, error } = await supabase.from('tickets').select('*').order('created_at', { ascending: false });
-        if (error) {
-            console.error('Database Error (getTickets):', error.message);
-            return [];
-        }
-        return data || [];
-    } catch (error: any) {
-        console.error('Data Fetching Error (getTickets):', error.message);
-        return [];
-    }
+  const data = await executeQuery(supabase =>
+    supabase.from('tickets').select('*').order('created_at', { ascending: false })
+  );
+  return data || [];
 }
 
 export async function getTicketByTicketId(ticketId: string): Promise<Ticket | null> {
-    const supabase = createAdminClient();
-    if (!supabase) return null;
-
-    try {
-        const { data, error } = await supabase.from('tickets').select('*').eq('ticket_id', ticketId).single();
-        if (error) {
-            // .single() throws an error if no row is found, which is expected.
-            if (error.code !== 'PGRST116') {
-                console.error('Database Error (getTicketByTicketId):', error.message);
-            }
-            return null;
-        }
-        return data;
-    } catch (error: any) {
-        console.error('Data Fetching Error (getTicketByTicketId):', error.message);
-        return null;
-    }
+  const data = await executeQuery(supabase =>
+    supabase.from('tickets').select('*').eq('ticket_id', ticketId).single()
+  );
+  return data;
 }
 
 export async function getStats() {
