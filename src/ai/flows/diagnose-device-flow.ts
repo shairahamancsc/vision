@@ -25,7 +25,7 @@ export type DiagnoseDeviceInput = z.infer<typeof DiagnoseDeviceInputSchema>;
 
 const DiagnoseDeviceOutputSchema = z.object({
   suggestedIssues: z.array(z.string()).describe('A list of suggested common issues based on the device details and problem description.'),
-  potentialSolutions: z.array(z.string()).describe('A list of potential solutions for the identified issues.'),
+  potentialSolutions: z.array(z.string()).describe('A list of potential solutions or diagnostic steps for the identified issues.'),
 });
 
 export type DiagnoseDeviceOutput = z.infer<typeof DiagnoseDeviceOutputSchema>;
@@ -38,28 +38,17 @@ const diagnoseDevicePrompt = ai.definePrompt({
   name: 'diagnoseDevicePrompt',
   input: {schema: DiagnoseDeviceInputSchema},
   output: {schema: DiagnoseDeviceOutputSchema},
-  prompt: `You are an expert technician specializing in diagnosing device issues.
+  prompt: `You are an expert technician AI specializing in diagnosing device issues.
+A customer has submitted a repair request with the following details.
 
-  Based on the provided device details and problem description, suggest common issues and potential solutions.
-  Consider the model number when forming the response.
+Device Information:
+- Brand: {{{brand}}}
+- Model: {{{model}}}
+- Stated Problem: {{{problemDescription}}}
 
-  Device Details:
-  - Brand: {{{brand}}}
-  - Model: {{{model}}}
-  - Problem Description: {{{problemDescription}}}
-
-  Customer Details:
-  - Name: {{{customerName}}}
-  - Mobile Number: {{{mobileNumber}}}
-  - Address: {{{address}}}
-
-  Suggested Issues:
-  - Issue 1
-  - Issue 2
-
-  Potential Solutions:
-  - Solution 1
-  - Solution 2`,
+Based *only* on the information provided, analyze the potential problems with the device.
+Provide a list of the most likely issues and a corresponding list of potential solutions or diagnostic steps a technician should take.
+Be concise and clear in your suggestions.`,
 });
 
 const diagnoseDeviceFlow = ai.defineFlow(

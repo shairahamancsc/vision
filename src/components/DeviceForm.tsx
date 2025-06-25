@@ -16,9 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScanBarcode, Loader2, Camera, Ticket } from 'lucide-react';
-import { createTicket } from '@/app/actions';
 import { useToast } from "@/hooks/use-toast";
-import type { DiagnosisData } from '@/app/actions';
 import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -32,19 +30,20 @@ const formSchema = z.object({
   problemDescription: z.string().min(10, "Please provide a detailed problem description."),
 });
 
+export type DeviceFormValues = z.infer<typeof formSchema>;
+
 type DeviceFormProps = {
-  setDiagnosis: (data: DiagnosisData | null) => void;
-  setIsLoading: (loading: boolean) => void;
+  onFormSubmit: (values: DeviceFormValues) => void;
   isLoading: boolean;
 };
 
-export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceFormProps) {
+export function DeviceForm({ onFormSubmit, isLoading }: DeviceFormProps) {
   const { toast } = useToast();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<DeviceFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       brand: "",
@@ -102,41 +101,11 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
     });
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsLoading(true);
-    setDiagnosis(null);
-    try {
-      // This server action creates a ticket and saves it to the database.
-      const result = await createTicket(values);
-      if (result) {
-        setDiagnosis(result);
-        toast({
-          title: "Ticket Created",
-          description: `Repair ticket ${result.ticketId} has been generated.`,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Ticket Creation Failed",
-          description: "Could not create a ticket. Please try again.",
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "An Error Occurred",
-        description: "Something went wrong while creating the ticket.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return (
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-6">
             <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
@@ -264,7 +233,7 @@ export function DeviceForm({ setDiagnosis, setIsLoading, isLoading }: DeviceForm
             
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Loader2 className="mr-2 animate-spin" /> : <Ticket className="mr-2" />}
-              {isLoading ? "Generating..." : "Create Ticket"}
+              {isLoading ? "Generating..." : "Create Ticket & Diagnose"}
             </Button>
           </form>
         </Form>
