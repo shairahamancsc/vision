@@ -60,8 +60,9 @@ async function executeQuery<T>(
     const { data, error } = await query(supabase);
 
     if (error) {
-      // Don't log an error if a single record is not found (this is expected for .single())
-      if (error.code !== 'PGRST116') {
+      // Don't log an error if a single record is not found (PGRST116) or if a table doesn't exist (42P01),
+      // as these are expected conditions during initial setup or for certain queries.
+      if (error.code !== 'PGRST116' && error.code !== '42P01') {
         console.error('Database Error:', error.message);
       }
       return null;
